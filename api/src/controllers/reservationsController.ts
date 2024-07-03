@@ -10,43 +10,56 @@ const reservationsService = new ReservationsService();
 // POST /api/reservations
 const createReservation = async (req: CustomRequest, res: Response) => {
   const { error } = validateReservations(req.body); // Validate request body
+  const { userId, carId, startDate, endDate } = req.body;
 
   try {
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    let { userId, carId, startDate, endDate } = req.body;
+    let selectedCarId = carId;
 
     if (!carId) {
-      console.log("no card id !");
-      const existingCar = await prisma.car.findFirst();
-      if (!existingCar) {
-        // If no cars exist, create a new car
-        const newCar = await prisma.car.create({
-          data: {
-            model: "test model",
-            year: 2020,
-            make: "make test",
+      console.log("No car id provided, finding an available car...");
+
+      const availableCar = await prisma.car.findFirst({
+        where: {
+          // conditions to check car availability within the specified date range
+          reservations: {
+            none: {
+              OR: [
+                {
+                  startDate: { lte: new Date(endDate) },
+                  endDate: { gte: new Date(startDate) },
+                },
+                {
+                  startDate: { gte: new Date(startDate) },
+                  endDate: { lte: new Date(endDate) },
+                },
+              ],
+            },
           },
-        });
-        console.log(newCar, "newCar during reservation creation process");
-        carId = newCar.id;
+        },
+      });
+
+      if (!availableCar) {
+        return res.status(404).json({ error: "No available cars for the specified dates." });
       } else {
-        carId = existingCar.id;
+        selectedCarId = availableCar.id;
       }
     }
 
     const reservation = await reservationsService.createReservation(
       userId,
-      carId,
-      // delete the carId field and try to add a new reservation without the carId !!!
+      selectedCarId,
       new Date(startDate),
       new Date(endDate)
     );
-    console.log("reservation created successfully : ", reservation);
+
+    console.log("Reservation created successfully:", reservation);
     res.status(201).json(reservation);
   } catch (error) {
+    console.error("Error creating reservation:", error);
     res.status(500).json({ error: "An error occurred while creating the reservation." });
   }
 };

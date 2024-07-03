@@ -1,11 +1,18 @@
-import { PrismaClient, Reservation } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
+
+interface UserSummary {
+  id: string;
+  email: string;
+  totalReservations: number;
+  totalDuration: number;
+}
 
 export default class UsersService {
   // get a list of users with total number of bookings and total duration booked
   async getUsersWithReservationsSummary() {
     try {
-      const usersWithSummary = await prisma.$queryRaw`
+      const usersWithSummary: UserSummary[] = await prisma.$queryRaw`
         SELECT 
             u.id::text as id,
             u.email,
@@ -19,11 +26,14 @@ export default class UsersService {
             u.id, u.email
       `;
 
-      // Convert to JSON string and parse
-      const jsonString = JSON.stringify(usersWithSummary);
-      const parsedData = JSON.parse(jsonString);
+      const usersSummary = usersWithSummary.map((user) => ({
+        id: user.id.toString(), // Convert id to string explicitly
+        email: user.email,
+        totalReservations: Number(user.totalReservations),
+        totalDuration: Number(user.totalDuration),
+      }));
 
-      return parsedData;
+      return usersSummary;
     } catch (error) {
       console.error("Error in getUsersWithReservationsSummary:", error);
       throw new Error("Failed to fetch users with reservations summary");

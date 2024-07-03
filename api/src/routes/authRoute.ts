@@ -1,12 +1,12 @@
 import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { LoginHandler } from "../controllers/authController";
+import { loginUser } from "../controllers/authController";
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
 // Login endpoint: POST /api/auth/login
-router.post("/login", LoginHandler);
+router.post("/login", loginUser);
 
 // Logout endpoint: POST /api/auth/logout
 router.post("/logout", (req: Request, res: Response) => {
