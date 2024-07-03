@@ -18,6 +18,7 @@ router.get("/duration", checkAuthToken, getReservationsWithDuration);
 router.put("/:id", checkAuthToken as RequestHandler, updateReservation);
 
 // POST /api/reservations - Create a new reservation
+// @ts-ignore
 router.post("/", checkAuthToken as RequestHandler, createReservation);
 
 // GET /api/reservations/users/:id - Get reservations by user ID

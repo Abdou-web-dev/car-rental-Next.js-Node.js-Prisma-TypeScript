@@ -8,6 +8,7 @@ import { validateSignUp } from "../validation/auth";
 const usersService = new UsersService();
 const prisma = new PrismaClient();
 
+// GET /api/users/signup
 export const SignUpHandler = async (req: Request, res: Response) => {
   const { error } = validateSignUp(req.body); // Validate request body
   if (error) {
@@ -60,6 +61,7 @@ export const SignUpHandler = async (req: Request, res: Response) => {
     };
 
     console.log("User registered successfully:", userToSend);
+    console.log("the accessToken is:", accessToken);
 
     res.status(201).json({ message: "User registered successfully", response });
   } catch (error) {

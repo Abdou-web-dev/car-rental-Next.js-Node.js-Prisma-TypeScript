@@ -44,6 +44,8 @@ export const LoginHandler = async (req: Request, res: Response) => {
       };
 
       // Return token
+      console.log("User logged in successfully:");
+
       res.status(200).json({ message: "User logged in successfully", response });
     } catch (error) {
       console.error("Error during login:", error);

@@ -2,12 +2,13 @@ import { Request, Response } from "express";
 import ReservationsService from "../services/reservationsService";
 import { validateReservations } from "../validation/reservations";
 import { PrismaClient } from "@prisma/client";
+import { CustomRequest } from "../types/types";
 const prisma = new PrismaClient();
 
 const reservationsService = new ReservationsService();
 
 // POST /api/reservations
-const createReservation = async (req: Request, res: Response) => {
+const createReservation = async (req: CustomRequest, res: Response) => {
   const { error } = validateReservations(req.body); // Validate request body
 
   try {
@@ -24,10 +25,9 @@ const createReservation = async (req: Request, res: Response) => {
         // If no cars exist, create a new car
         const newCar = await prisma.car.create({
           data: {
-            // name: carInfo.name,
-            model: "test",
+            model: "test model",
             year: 2020,
-            make: "dd",
+            make: "make test",
           },
         });
         console.log(newCar, "newCar during reservation creation process");
@@ -40,6 +40,7 @@ const createReservation = async (req: Request, res: Response) => {
     const reservation = await reservationsService.createReservation(
       userId,
       carId,
+      // delete the carId field and try to add a new reservation without the carId !!!
       new Date(startDate),
       new Date(endDate)
     );
@@ -53,10 +54,10 @@ const createReservation = async (req: Request, res: Response) => {
 // PUT /api/reservations/:id
 const updateReservation = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { carId, startDate, endDate } = req.body;
+  const { startDate, endDate } = req.body;
   try {
     const updatedReservation = await reservationsService.updateReservation(parseInt(id, 10), {
-      carId,
+      // carId,
       startDate,
       endDate,
     });

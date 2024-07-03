@@ -5,27 +5,25 @@ export default class UsersService {
   // get a list of users with total number of bookings and total duration booked
   async getUsersWithReservationsSummary() {
     try {
-      const usersWithSummary = await prisma.user.findMany({
-        include: {
-          reservations: {
-            select: {
-              id: true,
-              startDate: true,
-              endDate: true,
-              durationDays: true,
-            },
-          },
-        },
-      });
+      const usersWithSummary = await prisma.$queryRaw`
+        SELECT 
+            u.id::text as id,
+            u.email,
+            COUNT(r.id) AS "totalReservations",
+            COALESCE(SUM(r."durationDays"), 0) AS "totalDuration"
+        FROM 
+            "User" u
+        LEFT JOIN 
+            "Reservation" r ON u.id = r."userId"
+        GROUP BY 
+            u.id, u.email
+      `;
 
-      const usersSummary = usersWithSummary.map((user) => ({
-        id: user.id,
-        email: user.email,
-        totalReservations: user.reservations.length,
-        totalDuration: user.reservations.reduce((acc, curr) => acc + curr.durationDays, 0),
-      }));
+      // Convert to JSON string and parse
+      const jsonString = JSON.stringify(usersWithSummary);
+      const parsedData = JSON.parse(jsonString);
 
-      return usersSummary;
+      return parsedData;
     } catch (error) {
       console.error("Error in getUsersWithReservationsSummary:", error);
       throw new Error("Failed to fetch users with reservations summary");

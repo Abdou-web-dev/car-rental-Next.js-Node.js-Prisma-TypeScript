@@ -31,7 +31,7 @@ model Car {
 model Reservation {
   id        Int      @id @default(autoincrement())
   userId    Int
-  carId     Int
+  carId     Int 
   startDate DateTime
   endDate   DateTime
   durationDays Int     

@@ -15,4 +15,20 @@ export default class CarsService {
     });
     return car;
   }
+
+  async createCar(make: string, model: string, year: number) {
+    try {
+      const newCar = await prisma.car.create({
+        data: {
+          make,
+          model,
+          year,
+        },
+      });
+      return newCar;
+    } catch (error) {
+      console.error("Error in createCar:", error);
+      throw new Error("Failed to create car");
+    }
+  }
 }
