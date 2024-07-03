@@ -1,11 +1,17 @@
 import express, { Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import { CustomRequest, User } from "../types/types"; // Adjust path as per your project structure
 import { PrismaClient } from "@prisma/client";
+import { getAllCars, getCarById } from "../controllers/carsController";
 
-const prisma = new PrismaClient();
 // Initialize Express router
 const router = express.Router();
+
+// GET /api/cars - Get all cars
+router.get("/", getAllCars);
+
+// GET /api/cars/:id - Get details of a specific car
+router.get("/:id", getCarById);
+
+// POST /api/cars - Create a new car
+// router.post("/");
 
 export default router;

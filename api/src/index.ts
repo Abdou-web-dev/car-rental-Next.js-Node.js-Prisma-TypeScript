@@ -34,7 +34,7 @@ prisma
 // Authentication routes
 app.use("/api/auth", authRoute); // Handles user authentication: login and logout
 // User management routes
-app.use("/api/user", usersRoute); // Manages user operations: registration, profile, updates
+app.use("/api/users", usersRoute); // Manages user operations: registration, profile, updates
 // Cars management routes
 app.use("/api/cars", carsRoute); // Manages operations related to cars: listing, details, etc.
 // Reservations management routes

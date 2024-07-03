@@ -34,6 +34,7 @@ model Reservation {
   carId     Int
   startDate DateTime
   endDate   DateTime
+  durationDays Int     
   user      User     @relation(fields: [userId], references: [id])
   car       Car      @relation(fields: [carId], references: [id])
 }

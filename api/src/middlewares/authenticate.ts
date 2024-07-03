@@ -8,22 +8,14 @@ const checkAuthToken = (req: CustomRequest, res: Response, next: NextFunction) =
 
   if (!token) return res.sendStatus(401);
 
-  try {
-    jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN_SECRET!,
-      (err: jwt.VerifyErrors | null, user: string | jwt.JwtPayload | undefined) => {
-        if (err) {
-          throw err;
-        }
-        req.user = user as User;
-        next();
-      }
-    );
-  } catch (error) {
-    console.error("JWT verification error:", error);
-    return res.sendStatus(403); // Forbidden
-  }
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!, (err, decoded) => {
+    if (err) {
+      console.error("JWT verification error:", err);
+      return res.sendStatus(403); // Forbidden
+    }
+    req.user = decoded as User;
+    next();
+  });
 };
 
 export default checkAuthToken;
