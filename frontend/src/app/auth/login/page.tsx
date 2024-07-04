@@ -2,26 +2,28 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/authContext";
-import { loginUser } from "../../api/auth";
+import { loginUser } from "../../api/services/auth";
 import { AuthForm } from "../../components/forms/AuthForm";
 import { Welcome } from "../../components/Welcome";
 import { useRouter } from "next/navigation";
 import { CustomSpin } from "../../components/spinner/CustomSpinner";
 
 export default function Login() {
-  const { setIsLoggedIn, isLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn, isLoggedIn, setAuthenticatedUser, authenticatedUser } = useContext(AuthContext);
   const [loginError, setLoginError] = useState(""); // State to hold the error message
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true); // Loading state
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const { accessToken, userEmail } = await loginUser(password, email);
-      console.log(accessToken, userEmail, "token and email upon login");
+      const { accessToken, userEmail, userId } = await loginUser(password, email);
+      console.log(accessToken, userEmail, userId, "token and email upon login");
       if (accessToken) {
         setIsLoggedIn(true);
         localStorage.setItem("token", accessToken);
         localStorage.setItem("isLoggedIn", "true");
+        setAuthenticatedUser({ email: userEmail, id: userId });
+        console.log(authenticatedUser, "authenticatedUser");
       }
       router.push("/"); // Navigate to the root page
     } catch (error: any) {

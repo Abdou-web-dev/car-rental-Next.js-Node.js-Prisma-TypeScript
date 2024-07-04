@@ -1,10 +1,6 @@
-// export let cars = [
-//   { id: 1, make: "Toyota", model: "Corolla", year: 2022, reservations: [] },
-//   { id: 2, make: "Honda", model: "Civic", year: 2021, reservations: [] },
-//   { id: 3, make: "Ford", model: "F-150", year: 2020, reservations: [] },
-// ];
+import { Car } from "../types/types";
 
-let cars = [
+let cars: Car[] = [
   { id: 1, make: "Toyota", model: "Corolla", year: 2022, reservations: [] },
   { id: 2, make: "Honda", model: "Civic", year: 2021, reservations: [] },
   { id: 3, make: "Ford", model: "F-150", year: 2020, reservations: [] },

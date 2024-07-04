@@ -3,12 +3,16 @@ import ReservationsService from "../services/reservationsService";
 import { validateReservations } from "../validation/reservations";
 import { PrismaClient } from "@prisma/client";
 import { CustomRequest } from "../types/types";
+import { cars } from "../data/cars";
+import { isCarAvailable } from "./carsController";
 const prisma = new PrismaClient();
 
 const reservationsService = new ReservationsService();
 
 // POST /api/reservations
 const createReservation = async (req: CustomRequest, res: Response) => {
+  // res.status(200).json({ message: "createReservation API method called" });
+
   const { error } = validateReservations(req.body); // Validate request body
   const { userId, carId, startDate, endDate } = req.body;
 
@@ -22,25 +26,7 @@ const createReservation = async (req: CustomRequest, res: Response) => {
     if (!carId) {
       console.log("No car id provided, finding an available car...");
 
-      const availableCar = await prisma.car.findFirst({
-        where: {
-          // conditions to check car availability within the specified date range
-          reservations: {
-            none: {
-              OR: [
-                {
-                  startDate: { lte: new Date(endDate) },
-                  endDate: { gte: new Date(startDate) },
-                },
-                {
-                  startDate: { gte: new Date(startDate) },
-                  endDate: { lte: new Date(endDate) },
-                },
-              ],
-            },
-          },
-        },
-      });
+      const availableCar = cars?.find((car) => isCarAvailable(car, new Date(startDate), new Date(endDate)));
 
       if (!availableCar) {
         return res.status(404).json({ error: "No available cars for the specified dates." });
@@ -49,12 +35,25 @@ const createReservation = async (req: CustomRequest, res: Response) => {
       }
     }
 
+    const selectedCar = cars.find((car) => car.id === selectedCarId);
+
+    if (!selectedCar) {
+      return res.status(404).json({ error: "Car not found." });
+    }
+
+    // Check if the car is available for the specified dates
+    if (!isCarAvailable(selectedCar, new Date(startDate), new Date(endDate))) {
+      return res.status(400).json({ error: "Car is already booked for the selected dates." });
+    }
+
     const reservation = await reservationsService.createReservation(
       userId,
       selectedCarId,
       new Date(startDate),
       new Date(endDate)
     );
+
+    selectedCar.reservations.push(reservation);
 
     console.log("Reservation created successfully:", reservation);
     res.status(201).json(reservation);

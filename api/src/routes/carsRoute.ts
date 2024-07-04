@@ -1,6 +1,6 @@
 import express, { Request, RequestHandler, Response } from "express";
 // import { PrismaClient } from "@prisma/client";
-import { CreateCar, CreateNewCar, getAllCars, getAvailableCars, getCarById } from "../controllers/carsController";
+import { getAvailableCars, getCarById } from "../controllers/carsController";
 import checkAuthToken from "../middlewares/authenticate";
 
 // Initialize Express router

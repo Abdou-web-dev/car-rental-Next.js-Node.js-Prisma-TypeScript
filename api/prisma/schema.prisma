@@ -20,21 +20,12 @@ model User {
   reservations  Reservation[]
 }
 
-model Car {
-  id            Int          @id @default(autoincrement())
-  make          String
-  model         String
-  year          Int
-  reservations  Reservation[]
-}
 
 model Reservation {
   id        Int      @id @default(autoincrement())
   userId    Int
-  carId     Int 
   startDate DateTime
   endDate   DateTime
   durationDays Int     
   user      User     @relation(fields: [userId], references: [id])
-  car       Car      @relation(fields: [carId], references: [id])
 }

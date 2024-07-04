@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext, useEffect, useState } from "react";
-import { registerUser } from "../../api/auth";
+import { registerUser } from "../../api/services/auth";
 import { AuthForm } from "../../components/forms/AuthForm";
 import { Welcome } from "../../components/Welcome";
 import { AuthContext } from "../../context/authContext";

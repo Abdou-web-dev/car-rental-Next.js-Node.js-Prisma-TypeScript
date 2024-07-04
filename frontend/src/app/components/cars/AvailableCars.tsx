@@ -1,35 +1,20 @@
-import { FunctionComponent, useEffect, useState } from "react";
-import { API_URL } from "../../api/auth";
-import { Car } from "../../types/type";
-import axiosInstance from "../../axios/config";
+import { FunctionComponent, useContext, useState } from "react";
+import { Car, CreateReservationResponse } from "../../types/type";
+import { fetchCars } from "../../api/services/carsService";
+import { SingleCar } from "./SingleCar";
+import { makeReservation } from "../../api/services/reservationService";
 
-interface AvailableCarsProps {
-  // handleLogout: () => void;
-}
+interface AvailableCarsProps {}
 
 const AvailableCars: FunctionComponent<AvailableCarsProps> = () => {
   const [cars, setCars] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  const fetchCars = async () => {
+  const handleFetchCars: () => Promise<void> = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-
-      const response = await axiosInstance.get(`${API_URL}/cars`, {
-        headers,
-        params: { startDate, endDate },
-      });
-      // http://localhost:5000/api/cars?startDate=2024-07-04&endDate=2024-07-10
-
-      console.log(response, "cars response");
-      if (!response.data) {
-        throw new Error("Failed to fetch cars");
-      }
-      setCars(response.data);
+      const cars = await fetchCars({ startDate, endDate });
+      setCars(cars);
     } catch (error) {
       console.error("Error fetching cars:", error);
     }
@@ -64,8 +49,11 @@ const AvailableCars: FunctionComponent<AvailableCarsProps> = () => {
         </div>
         <div>
           <button
-            onClick={fetchCars}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            onClick={handleFetchCars}
+            className={`
+              ${!startDate || !endDate ? "cursor-not-allowed" : "cursor-pointer"}
+            bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded`}
+            disabled={!startDate && !endDate}
           >
             Check Availability
           </button>
@@ -74,14 +62,15 @@ const AvailableCars: FunctionComponent<AvailableCarsProps> = () => {
 
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
         {cars?.map((car: Car) => (
-          <li
-            key={car.id}
-            className="border border-gray-300 rounded-lg p-4 shadow-md"
-          >
-            <span className="font-bold text-lg block">{car.make}</span>
-            <span className="text-gray-500 block">{car.model}</span>
-            <span className="block">({car.year})</span>
-          </li>
+          <SingleCar
+            key={car?.id}
+            {...{
+              car,
+              startDate,
+              endDate,
+              // handleCreateReservation,
+            }}
+          ></SingleCar>
         ))}
       </ul>
     </div>
