@@ -21,6 +21,7 @@ export default class ReservationsService {
         throw new Error("End date cannot be before start date.");
       }
 
+      // Check if the car is available
       const isAvailable: boolean = await carsService.isCarAvailable(carId, startDate, endDate);
 
       // By ensuring that the reservation is only created when the car is available, this code helps prevent double bookings and maintain data integrity

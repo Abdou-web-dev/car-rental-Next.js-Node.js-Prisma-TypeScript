@@ -19,9 +19,11 @@ export default function Signup() {
 
     try {
       const { accessToken, userEmail } = await registerUser(email, password);
-      setIsLoggedIn(true);
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("token", accessToken);
+      if (accessToken) {
+        setIsLoggedIn(true);
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("token", accessToken);
+      }
       console.log(accessToken, "token");
       router.push("/"); // Navigate to the root page
     } catch (error: any) {

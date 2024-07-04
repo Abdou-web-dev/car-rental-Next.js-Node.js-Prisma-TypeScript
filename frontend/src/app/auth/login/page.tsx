@@ -2,7 +2,7 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/authContext";
-import { loginUser, registerUser } from "../../api/auth";
+import { loginUser } from "../../api/auth";
 import { AuthForm } from "../../components/forms/AuthForm";
 import { Welcome } from "../../components/Welcome";
 import { useRouter } from "next/navigation";
@@ -18,13 +18,15 @@ export default function Login() {
     try {
       const { accessToken, userEmail } = await loginUser(password, email);
       console.log(accessToken, userEmail, "token and email upon login");
-      localStorage.setItem("token", accessToken);
-      setIsLoggedIn(true);
-      localStorage.setItem("isLoggedIn", "true");
+      if (accessToken) {
+        setIsLoggedIn(true);
+        localStorage.setItem("token", accessToken);
+        localStorage.setItem("isLoggedIn", "true");
+      }
       router.push("/"); // Navigate to the root page
     } catch (error: any) {
       console.error("login failed:", error);
-      setLoginError(error.response.data.message);
+      setLoginError(error?.response?.data?.message);
     }
   };
 
