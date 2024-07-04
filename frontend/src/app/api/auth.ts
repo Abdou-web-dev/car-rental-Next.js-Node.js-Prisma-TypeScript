@@ -7,6 +7,7 @@ export const registerUser = async (email: string, password: string) => {
     const response = await axios.post(`${API_URL}/users/signup`, { email, password });
     console.log(response.data.response, "response from auth.ts upon registering a new user from client");
     const accessToken = response?.data?.response?.accessToken;
+    //
 
     const userEmail = response?.data?.response?.user?.email;
 
