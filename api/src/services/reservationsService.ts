@@ -1,6 +1,8 @@
 import { PrismaClient, Reservation } from "@prisma/client";
+import CarsService from "./carsService";
 
 const prisma = new PrismaClient();
+const carsService = new CarsService();
 
 export default class ReservationsService {
   // Helper function to calculate duration in days
@@ -13,18 +15,36 @@ export default class ReservationsService {
 
   //create a new reservation
   async createReservation(userId: number, carId: number, startDate: Date, endDate: Date) {
-    const durationDays = this.calculateDuration(startDate, endDate);
+    try {
+      // Check if the end date is before the start date
+      if (endDate <= startDate) {
+        throw new Error("End date cannot be before start date.");
+      }
 
-    const newReservation = await prisma.reservation.create({
-      data: {
-        userId,
-        carId,
-        startDate: startDate,
-        endDate,
-        durationDays,
-      },
-    });
-    return newReservation;
+      const isAvailable: boolean = await carsService.isCarAvailable(carId, startDate, endDate);
+
+      // By ensuring that the reservation is only created when the car is available, this code helps prevent double bookings and maintain data integrity
+      if (!isAvailable) {
+        throw new Error("Car is already booked for the selected dates.");
+      } else {
+        // ensures that the reservation is only created if the car is available for the specified dates.
+        const durationDays = this.calculateDuration(startDate, endDate);
+
+        const newReservation = await prisma.reservation.create({
+          data: {
+            userId,
+            carId,
+            startDate,
+            endDate,
+            durationDays,
+          },
+        });
+        return newReservation;
+      }
+    } catch (error) {
+      console.error("Error creating reservation:", error);
+      throw new Error("Failed to create reservation. Please try again later.");
+    }
   }
 
   //Update details of an existing reservation.
