@@ -1,15 +1,15 @@
-import { FunctionComponent, useContext, useState } from "react";
-import { Car, CreateReservationResponse } from "../../types/type";
-import { fetchCars } from "../../api/services/carsService";
+import { FunctionComponent, useEffect, useState } from "react";
+import { Car } from "../../types/type";
+import { fetchCars } from "../../api/services/carService";
 import { SingleCar } from "./SingleCar";
-import { makeReservation } from "../../api/services/reservationService";
+// import { makeReservation } from "../../api/services/reservationService";
 
 interface AvailableCarsProps {}
 
 const AvailableCars: FunctionComponent<AvailableCarsProps> = () => {
   const [cars, setCars] = useState([]);
   const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [endDate, setEndDate] = useState(""); //2024-07-16 startDate example
 
   const handleFetchCars: () => Promise<void> = async () => {
     try {
@@ -40,6 +40,7 @@ const AvailableCars: FunctionComponent<AvailableCarsProps> = () => {
           <label className="block mb-1 text-xs font-medium text-blue-700">End Date :</label>
           <input
             type="date"
+            // input (type="date") is not strictly ISO 8601 with time and timezone (YYYY-MM-DDTHH:mm:ss.sssZ), but rather YYYY-MM-DD
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             min={startDate} // Set the minimum end date to the selected start date

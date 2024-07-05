@@ -24,6 +24,10 @@ export default class ReservationsService {
       // Check if the car is available
       const isAvailable: boolean = await carsService.isCarAvailable(carId, startDate, endDate);
 
+      // Context: This function "isCarAvailable" above is used to check if a car is available upon reservation creation based on the reservation records stored in the database.
+      // Data Source: Prisma database.
+      // Usage: Used in the createReservation function in reservationsService to ensure the car is available before creating a new reservation.
+
       // By ensuring that the reservation is only created when the car is available, this code helps prevent double bookings and maintain data integrity
       if (!isAvailable) {
         throw new Error("Car is already booked for the selected dates.");

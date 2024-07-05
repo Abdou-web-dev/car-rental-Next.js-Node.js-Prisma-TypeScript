@@ -17,11 +17,13 @@ export default function Login() {
   const handleLogin = async (email: string, password: string) => {
     try {
       const { accessToken, userEmail, userId } = await loginUser(password, email);
-      console.log(accessToken, userEmail, userId, "token and email upon login");
+      console.log("token and email and user id upon login are :", accessToken, userEmail, userId);
       if (accessToken) {
         setIsLoggedIn(true);
         localStorage.setItem("token", accessToken);
         localStorage.setItem("isLoggedIn", "true");
+        // Store user info in localStorage upon successful login
+        localStorage.setItem("user", JSON.stringify({ email: userEmail, id: userId }));
         setAuthenticatedUser({ email: userEmail, id: userId });
         console.log(authenticatedUser, "authenticatedUser");
       }

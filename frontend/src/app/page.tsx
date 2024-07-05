@@ -6,7 +6,7 @@ import { AuthContext } from "./context/authContext";
 import AvailableCars from "./components/cars/AvailableCars";
 
 const Home = () => {
-  const { isLoggedIn, setIsLoggedIn, authenticatedUser } = useContext(AuthContext);
+  const { isLoggedIn, setIsLoggedIn, authenticatedUser, setAuthenticatedUser } = useContext(AuthContext);
   const router = useRouter();
 
   useEffect(() => {
@@ -25,13 +25,27 @@ const Home = () => {
     router.push("/auth/signup"); // Redirect to signup page after logout
   };
 
+  useEffect(() => {
+    // the authentication context initialization (useEffect for setting authenticatedUser) must happen early in your application lifecycle, ideally in a central component like page.tsx
+    const accessToken = localStorage.getItem("token");
+    if (accessToken && isLoggedIn) {
+      // Parse the token or fetch user info from localStorage
+      const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+      console.log(storedUser, "storedUser");
+
+      setAuthenticatedUser({
+        email: storedUser?.email,
+        id: storedUser?.id,
+      });
+      console.log(authenticatedUser, "authenticatedUser");
+      //   setAuthenticatedUser is used to update the authentication context with the user information retrieved from localStorage.
+      //   console.log(authenticatedUser, "authenticatedUser");
+    }
+  }, [isLoggedIn]);
+
   if (isLoggedIn) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-between p-24">
-        {/* {authenticatedUser && authenticatedUser.email}
-        <br />
-        {authenticatedUser && authenticatedUser.id} */}
-
         <AvailableCars></AvailableCars>
         <div className="flex justify-end mt-4">
           <button

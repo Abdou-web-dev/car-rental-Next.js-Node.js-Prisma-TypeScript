@@ -1,19 +1,9 @@
 import { Request, RequestHandler, Response } from "express";
 import CarsService from "../services/carsService";
-// import { validateCars } from "../validation/cars";
 import { cars } from "../data/cars";
+import { Car, Reservation } from "../types/types";
 
 const carsService = new CarsService();
-
-// GET /api/cars
-// export const getAllCars = async (req: Request, res: Response) => {
-//   try {
-//     const cars = await carsService.getAllCars();
-//     res.status(200).json(cars);
-//   } catch (error: any) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };
 
 // GET /api/cars/:id
 export const getCarById = async (req: Request, res: Response) => {
@@ -29,37 +19,15 @@ export const getCarById = async (req: Request, res: Response) => {
   }
 };
 
-// export const CreateNewCar = async (req: Request, res: Response) => {
-//   // Validate request body using Joi schema
-//   const { error } = validateCars(req.body);
-
-//   try {
-//     if (error) {
-//       return res.status(400).json({ error: error.details[0].message });
-//     }
-//     const { make, model, year } = req.body;
-
-//     // Create new car using service function
-//     const newCar = await carsService.createCar(make, model, year);
-
-//     // Log success message
-//     console.log("New car created:", newCar);
-
-//     // Return success response
-//     res.status(201).json(newCar);
-//   } catch (error) {
-//     // Log and handle any errors
-//     console.error("Error creating new car:", error);
-//     res.status(500).json({ error: "Failed to create new car" });
-//   }
-// };
-
-export const isCarAvailable = (car: any, startDate: Date, endDate: Date) => {
-  return car.reservations.every((reservation: any) => {
+export const isCarAvailable = (car: Car, startDate: Date, endDate: Date) => {
+  return car.reservations.every((reservation: Reservation) => {
     return endDate < new Date(reservation.startDate) || startDate > new Date(reservation.endDate);
   });
 };
 
+// Context: This function is used to filter through the static array of cars and check if a car is available based on its reservations.
+// Data Source: Static array of cars with their reservations.
+// Usage: Directly used in the getAvailableCars endpoint to determine which cars are available in the given date range.
 export const getAvailableCars: RequestHandler = async (req: Request, res: Response) => {
   const { startDate, endDate } = req.query;
 
@@ -70,6 +38,6 @@ export const getAvailableCars: RequestHandler = async (req: Request, res: Respon
   const start = new Date(startDate as string);
   const end = new Date(endDate as string);
 
-  const availableCars = cars.filter((car: any) => isCarAvailable(car, start, end));
+  const availableCars = cars?.filter((car: any) => isCarAvailable(car, start, end));
   res.json(availableCars);
 };

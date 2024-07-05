@@ -15,8 +15,8 @@ export interface User {
 export interface CreateReservationRequest {
   userId: number;
   carId?: number; // Optional, as the backend can find an available car if not provided
-  startDate: string; // ISO 8601 format date string
-  endDate: string; // ISO 8601 format date string
+  startDate: string; //  YYYY-MM-DD format date string
+  endDate: string; //  YYYY-MM-DD format date string
 }
 
 // Define the response interface for reservation creation

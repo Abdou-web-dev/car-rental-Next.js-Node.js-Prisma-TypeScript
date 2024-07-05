@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import ReservationsService from "../services/reservationsService";
 import { validateReservations } from "../validation/reservations";
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
 import { CustomRequest } from "../types/types";
 import { cars } from "../data/cars";
 import { isCarAvailable } from "./carsController";
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 const reservationsService = new ReservationsService();
 
@@ -23,10 +23,23 @@ const createReservation = async (req: CustomRequest, res: Response) => {
 
     let selectedCarId = carId;
 
+    // Convert string dates to Date objects
+    let start, end;
+    try {
+      start = new Date(startDate);
+      end = new Date(endDate);
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        throw new Error("Invalid date format");
+      }
+    } catch (error) {
+      return res.status(400).json({ message: "Invalid date format" });
+    }
+
     if (!carId) {
       console.log("No car id provided, finding an available car...");
 
-      const availableCar = cars?.find((car) => isCarAvailable(car, new Date(startDate), new Date(endDate)));
+      const availableCar = cars?.find((car) => isCarAvailable(car, start, end));
+      // new Date(startDate) and new Date(endDate) perform a conversion from the string values received from the frontend to Date objects in JavaScript.
 
       if (!availableCar) {
         return res.status(404).json({ error: "No available cars for the specified dates." });

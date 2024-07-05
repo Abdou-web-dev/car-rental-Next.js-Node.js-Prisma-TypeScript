@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { CustomSpin } from "../../components/spinner/CustomSpinner";
 
 export default function Signup() {
-  const { setIsLoggedIn, isLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn, isLoggedIn, setAuthenticatedUser } = useContext(AuthContext);
   const router = useRouter();
   const [signUpError, setSignUpError] = useState(""); // State to hold the error message
   const [isLoading, setIsLoading] = useState(true); // Loading state
@@ -18,11 +18,14 @@ export default function Signup() {
     setIsLoading(true); // Set loading to true when starting signup
 
     try {
-      const { accessToken, userEmail } = await registerUser(email, password);
+      const { accessToken, userEmail, userId } = await registerUser(email, password);
       if (accessToken) {
         setIsLoggedIn(true);
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("token", accessToken);
+        // Store user info in localStorage upon successful login
+        localStorage.setItem("user", JSON.stringify({ email: userEmail, id: userId }));
+        setAuthenticatedUser({ email: userEmail, id: userId });
       }
       console.log(accessToken, "token");
       router.push("/"); // Navigate to the root page
