@@ -7,6 +7,7 @@ import { AuthForm } from "../../components/forms/AuthForm";
 import { Welcome } from "../../components/Welcome";
 import { useRouter } from "next/navigation";
 import { CustomSpin } from "../../components/spinner/CustomSpinner";
+import ViewReservButtons from "../../components/ViewReservButtons";
 
 export default function Login() {
   const { setIsLoggedIn, isLoggedIn, setAuthenticatedUser, authenticatedUser } = useContext(AuthContext);
@@ -59,7 +60,6 @@ export default function Login() {
     <div className="login-page-container ">
       {/* Responsive width */}
       <Welcome />
-
       <div className="authform-and-button flex justify-center items-center flex-col my-24">
         <div className="w-full sm:w-1/2 lg:w-[35%]">
           <AuthForm
@@ -78,6 +78,9 @@ export default function Login() {
           </button>
         </div>
       </div>
+      <div className="mb-40">
+        <ViewReservButtons></ViewReservButtons>
+      </div>{" "}
     </div>
   );
 }

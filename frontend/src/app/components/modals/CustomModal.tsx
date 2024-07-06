@@ -1,15 +1,19 @@
 import { Dispatch, FunctionComponent, SetStateAction } from "react";
 import Modal from "react-modal";
 
-import { Car, Reservation } from "../../types/type";
-
-interface ReservationModalProps {
+interface CustomModalProps {
   isModalOpen: boolean;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
   children: React.ReactNode;
+  isReservationDetailsModalOpen?: boolean;
 }
 
-const ReservationModal: FunctionComponent<ReservationModalProps> = ({ isModalOpen, setIsModalOpen, children }) => {
+const CustomModal: FunctionComponent<CustomModalProps> = ({
+  isModalOpen,
+  setIsModalOpen,
+  isReservationDetailsModalOpen,
+  children,
+}) => {
   return (
     <div>
       {/* Reservation Modal Infos */}
@@ -23,7 +27,7 @@ const ReservationModal: FunctionComponent<ReservationModalProps> = ({ isModalOpe
           },
           content: {
             width: "30%",
-            margin: "10rem auto",
+            margin: `${isReservationDetailsModalOpen ? "5rem auto" : "10rem auto"} `,
             padding: "20px", // Padding for modal body
             background: "white",
             borderRadius: "8px",
@@ -38,4 +42,4 @@ const ReservationModal: FunctionComponent<ReservationModalProps> = ({ isModalOpe
   );
 };
 
-export default ReservationModal;
+export default CustomModal;

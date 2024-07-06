@@ -1,6 +1,13 @@
 import axios from "axios";
 import { API_URL } from "./auth";
-import { CreateReservationRequest, CreateReservationResponse } from "../../types/type";
+import {
+  allUsersReservationsResponse,
+  allUsersReservationsSummaryResponse,
+  ChangeReservationRequest,
+  CreateReservationRequest,
+  CreateReservationResponse,
+  Reservation,
+} from "../../types/type";
 
 // Service method to create a reservation
 export const makeReservation = async (
@@ -30,6 +37,75 @@ export const makeReservation = async (
     return response.data;
   } catch (error) {
     console.error("Error creating reservation:", error);
+    throw error;
+  }
+};
+
+export const changeReservation = async (
+  reservationId: number,
+  startDate: string,
+  endDate: string
+): Promise<Reservation> => {
+  const token = localStorage.getItem("token");
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  const requestBody: ChangeReservationRequest = {
+    startDate,
+    endDate,
+  };
+
+  try {
+    const response = await axios.put<Reservation>(`${API_URL}/reservations/${reservationId}`, requestBody, { headers });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error updating reservation:", error);
+    throw error;
+  }
+};
+
+export const fetchUserReservations = async (userId: number): Promise<Reservation[]> => {
+  const token = localStorage.getItem("token");
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  try {
+    const response = await axios.get(`${API_URL}/users/${userId}/reservations`, { headers });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user reservations:", error);
+    throw error;
+  }
+};
+
+export const fetchAllUsersReservations = async (): Promise<allUsersReservationsResponse[]> => {
+  try {
+    //localhost:5000/api/reservations/duration
+    const response = await axios.get(`${API_URL}/reservations/duration`);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user reservations:", error);
+    throw error;
+  }
+};
+
+export const fetchUsersReservationsSummary = async (): Promise<allUsersReservationsSummaryResponse[]> => {
+  const token = localStorage.getItem("token");
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  try {
+    // from the backend ,get a list of users with total number of bookings and total duration booked
+
+    const response = await axios.get(`${API_URL}/users/reservations-summary`, { headers });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user reservations:", error);
     throw error;
   }
 };

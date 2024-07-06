@@ -7,6 +7,7 @@ import { Welcome } from "../../components/Welcome";
 import { AuthContext } from "../../context/authContext";
 import { useRouter } from "next/navigation";
 import { CustomSpin } from "../../components/spinner/CustomSpinner";
+import ViewReservButtons from "../../components/ViewReservButtons";
 
 export default function Signup() {
   const { setIsLoggedIn, isLoggedIn, setAuthenticatedUser } = useContext(AuthContext);
@@ -61,7 +62,7 @@ export default function Signup() {
     <div className="">
       <div className="signup-page-container ">
         <Welcome />
-        <div className="flex justify-center items-center flex-col my-24">
+        <div className="authform flex justify-center items-center flex-col my-24">
           <div className="w-full sm:w-1/2 lg:w-[35%]">
             <AuthForm
               onSubmit={handleSignup}
@@ -80,6 +81,10 @@ export default function Signup() {
               Login
             </button>
           </div>
+        </div>
+
+        <div className="mb-40">
+          <ViewReservButtons></ViewReservButtons>
         </div>
       </div>
     </div>

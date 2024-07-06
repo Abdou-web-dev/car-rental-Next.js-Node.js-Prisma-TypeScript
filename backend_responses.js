@@ -1,6 +1,9 @@
 // http://localhost:5000/api/users/reservations-summary
 
 // RESPONSE :
+// The summary might include information like total reservations, reservations per user, average reservation duration, or other aggregated metrics.
+// This endpoint provides a summary for each user individually, making it easy to see how active each user is in terms of reservations.
+// It can be useful for analyzing user engagement and reservation patterns.
 
 let RES = [
   {
@@ -134,6 +137,8 @@ let RES = [
 // http://localhost:5000/api/reservations/duration
 
 // RESPONSE
+
+// Use GET /api/users/duration when you need to retrieve reservations for all users combined , with additional duration information, potentially for reporting, analytics, or other purposes where knowing the duration is essential.
 
 let RES2 = [
   {
@@ -1267,6 +1272,8 @@ let RES2 = [
 
 //localhost:5000/api/users/7/reservations
 // RESPONSE
+
+// Use GET /api/users/:id/reservations when you need to retrieve all reservations for a specific user.
 
 let RES3 = [
   {

@@ -11,7 +11,11 @@ const router = express.Router();
 
 // GET /api/reservations/duration - Get reservations with duration
 // @ts-ignore
-router.get("/duration", checkAuthToken, getReservationsWithDuration);
+// router.get("/duration",checkAdmin, getReservationsWithDuration);
+router.get("/duration", getReservationsWithDuration);
+// checkAdmin is an example of middlware that would be impelmented to grant access to this page ,that points to the backend api endpoint localhost:5000/api/reservations/duration
+// to only administrators...
+// because it allows for the viewing of reservations of all users combined
 
 // PUT /api/reservations/:id
 router.put("/:id", checkAuthToken as RequestHandler, updateReservation);

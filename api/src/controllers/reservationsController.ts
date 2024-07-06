@@ -87,7 +87,6 @@ const updateReservation = async (req: Request, res: Response) => {
   const { startDate, endDate } = req.body;
   try {
     const updatedReservation = await reservationsService.updateReservation(parseInt(id, 10), {
-      // carId,
       startDate,
       endDate,
     });

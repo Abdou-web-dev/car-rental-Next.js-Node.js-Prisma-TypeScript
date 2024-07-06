@@ -54,9 +54,23 @@ export default class ReservationsService {
 
   //Update details of an existing reservation.
   async updateReservation(reservationId: number, newData: Partial<Reservation>) {
+    const { startDate, endDate } = newData;
+
+    // Calculate durationDays if both startDate and endDate are provided
+    let durationDays: number | undefined;
+    if (startDate && endDate) {
+      const startTime = new Date(startDate);
+      const endTime = new Date(endDate);
+      const timeDifference = endTime.getTime() - startTime.getTime();
+      durationDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
+    }
+
     const updatedReservation = await prisma.reservation.update({
       where: { id: reservationId },
-      data: newData,
+      data: {
+        ...newData,
+        durationDays, // Update durationDays if calculated
+      },
     });
     return updatedReservation;
   }

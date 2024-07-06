@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useContext, useState } from "react";
 import { Car } from "../../types/type";
 import { fetchCars } from "../../api/services/carService";
 import { SingleCar } from "./SingleCar";
@@ -7,7 +7,9 @@ import { SingleCar } from "./SingleCar";
 interface AvailableCarsProps {}
 
 const AvailableCars: FunctionComponent<AvailableCarsProps> = () => {
-  const [cars, setCars] = useState([]);
+  // const { cars, setCars } = useContext(CarsContext);
+  const [cars, setCars] = useState<Car[]>([]);
+
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState(""); //2024-07-16 startDate example
 
@@ -20,6 +22,9 @@ const AvailableCars: FunctionComponent<AvailableCarsProps> = () => {
       console.error("Error fetching cars:", error);
     }
   };
+
+  const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+  console.log(storedUser, "storedUser");
 
   return (
     <div className="w-full ">
@@ -74,7 +79,6 @@ const AvailableCars: FunctionComponent<AvailableCarsProps> = () => {
               car,
               startDate,
               endDate,
-              // handleCreateReservation,
             }}
           ></SingleCar>
         ))}

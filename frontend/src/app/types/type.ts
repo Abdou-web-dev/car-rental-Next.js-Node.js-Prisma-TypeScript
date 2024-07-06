@@ -19,6 +19,11 @@ export interface CreateReservationRequest {
   endDate: string; //  YYYY-MM-DD format date string
 }
 
+export interface ChangeReservationRequest {
+  startDate: string; //  YYYY-MM-DD format date string
+  endDate: string; //  YYYY-MM-DD format date string
+}
+
 // Define the response interface for reservation creation
 export interface CreateReservationResponse {
   message: string; // Message from the backend
@@ -32,4 +37,19 @@ export interface Reservation {
   startDate: string;
   endDate: string;
   durationDays: number;
+}
+
+export interface allUsersReservationsResponse {
+  id: number;
+  userId: number;
+  startDate: string;
+  endDate: string;
+  durationDays: number;
+}
+
+export interface allUsersReservationsSummaryResponse {
+  id: number;
+  email: string;
+  totalReservations: number;
+  totalDuration: number;
 }

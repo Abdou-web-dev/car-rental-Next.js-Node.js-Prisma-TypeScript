@@ -7,12 +7,16 @@ import closeIcon from "../../../../../public/assets/img/close.png";
 interface CarInfosModalContentProps {
   car: Car | null;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+  handleCreateReservation: () => Promise<void>;
+  reservationIsDone: boolean;
 }
 
-const CarInfosModalContent: FunctionComponent<CarInfosModalContentProps> = ({ car, setIsModalOpen }) => {
-  // const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
-  // console.log(storedUser, "storedUser");
-
+const CarInfosModalContent: FunctionComponent<CarInfosModalContentProps> = ({
+  car,
+  reservationIsDone,
+  setIsModalOpen,
+  handleCreateReservation,
+}) => {
   if (car)
     return (
       <div className="p-4 flex flex-col items-center pt-0 pe-0">
@@ -49,6 +53,19 @@ const CarInfosModalContent: FunctionComponent<CarInfosModalContentProps> = ({ ca
           <p className="mb-2 font-serif">Year: {car.year}</p>
           {/* Add more car details as needed */}
         </div>
+        {!reservationIsDone && (
+          <div>
+            <button
+              onClick={async () => {
+                await handleCreateReservation();
+                setIsModalOpen(false);
+              }}
+              className="py-2.5 px-4 top-0 left-0 right-0 bottom-0 bg-green-500 hover:bg-green-600 text-white font-bold rounded transition-opacity duration-300"
+            >
+              <span className="text-xs">Book this car now</span>
+            </button>
+          </div>
+        )}
       </div>
     );
 };

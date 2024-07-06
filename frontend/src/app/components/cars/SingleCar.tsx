@@ -1,17 +1,16 @@
 import { FunctionComponent, useContext, useEffect, useState } from "react";
 import { Car, CreateReservationResponse, Reservation } from "../../types/type";
-import { makeReservation } from "../../api/services/reservationService";
+import { changeReservation, makeReservation } from "../../api/services/reservationService";
 import { AuthContext } from "../../context/authContext";
-
-import "./styles.css";
 import Image from "next/image";
 import { formatElapsedTime } from "../../utils/helpers";
 import { carBrandLogo } from "../../utils/logos";
-import ReservationModal from "../modals/ReservationModal";
+import CustomModal from "../modals/CustomModal";
 import ReservationModalContent from "../modals/content/ReservationModalContent";
 // import CarInfosModalContent from "../modals/content/CarInfosModalContent";
 import { fetchCarById } from "../../api/services/carService";
 import CarInfosModalContent from "../modals/content/CarInfosModalContent";
+import "./styles.css";
 
 interface SingleCarProps {
   car: Car;
@@ -21,13 +20,15 @@ interface SingleCarProps {
 
 export const SingleCar: FunctionComponent<SingleCarProps> = ({ car, startDate, endDate }) => {
   const [reservation, setReservation] = useState<Reservation>();
+  const [updatedReservation, setUpdatedReservation] = useState<Reservation>();
+
   const { authenticatedUser } = useContext(AuthContext);
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
   const [isCarInfosModalOpen, setIsCarInfosModalOpen] = useState(false);
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
-
   const [message, setMessage] = useState("");
   const [bookingTime, setBookingTime] = useState<null | Date | undefined>(null);
+  const [isReservationDetailsModalOpen, setIsReservationDetailsModalOpen] = useState(false);
   let reservationIsDone = message === "Reservation created successfully";
 
   const handleCreateReservation = async () => {
@@ -52,8 +53,24 @@ export const SingleCar: FunctionComponent<SingleCarProps> = ({ car, startDate, e
     }
   };
 
-  const handleChangeReservation = () => {
-    // Logic to change a reservation
+  const handleChangeReservation = async () => {
+    if (!reservation) {
+      console.error("No reservation found.");
+      return;
+    }
+    // Format dates as ISO-8601
+    //  Dates should be formatted as YYYY-MM-DDTHH:mm:ss.sssZ where Z indicates UTC time zone. Ensure that your dates are converted to this format using JavaScript's toISOString() method.
+    const startDate = new Date("2020/04/15").toISOString();
+    const endDate = new Date("2021/04/22").toISOString();
+    try {
+      const updateReservationResponse: Reservation = await changeReservation(reservation.id, startDate, endDate);
+
+      setUpdatedReservation(updateReservationResponse);
+      console.log("Reservation updated successfully!", updateReservationResponse);
+    } catch (error) {
+      console.error("Error updating reservation:", error);
+      alert("Failed to update reservation. Please try again later.");
+    }
   };
 
   useEffect(() => {
@@ -89,6 +106,11 @@ export const SingleCar: FunctionComponent<SingleCarProps> = ({ car, startDate, e
     } catch (error) {
       console.error("Error fetching car details:", error);
     }
+  };
+
+  const showReservationDetails = () => {
+    if (reservationIsDone) setIsReservationDetailsModalOpen(true);
+    else return;
   };
 
   return (
@@ -144,29 +166,63 @@ export const SingleCar: FunctionComponent<SingleCarProps> = ({ car, startDate, e
             )}
           </div>
         </li>
-        <ReservationModal
-          {...{ car, isModalOpen: isReservationModalOpen, reservation, setIsModalOpen: setIsReservationModalOpen }}
+        <CustomModal
+          {...{ isModalOpen: isReservationModalOpen, setIsModalOpen: setIsReservationModalOpen }}
           children={<ReservationModalContent {...{ reservation, car, setIsModalOpen: setIsReservationModalOpen }} />}
-        ></ReservationModal>
+        ></CustomModal>
       </div>
 
       <div className="mt-0.5 mb-4">
-        <button
-          onClick={showCarDetails}
-          className="bg-slate-400 hover:bg-slate-500 text-white px-1 font-bold rounded transition-opacity duration-300 opacity-0 group-hover:opacity-100 absolute hidden group-hover:block"
-        >
-          <span
-            className=""
-            style={{ fontSize: ".6rem", letterSpacing: ".1rem" }}
-          >
-            View car details
-          </span>
-        </button>
+        <div className="mt-0.5 mb-4 flex flex-col gap-7">
+          {reservationIsDone && (
+            <div>
+              <button
+                onClick={showReservationDetails}
+                className="bg-red-400 hover:bg-red-500 text-white px-1 font-bold rounded transition-opacity duration-300 opacity-0 group-hover:opacity-100 absolute hidden group-hover:block"
+              >
+                <span
+                  className=""
+                  style={{ fontSize: ".6rem", letterSpacing: ".1rem" }}
+                >
+                  View Reservation details
+                </span>
+              </button>
+            </div>
+          )}
+          <div>
+            <button
+              onClick={showCarDetails}
+              className="bg-slate-400 hover:bg-slate-500 text-white px-1 font-bold rounded transition-opacity duration-300 opacity-0 group-hover:opacity-100 absolute hidden group-hover:block"
+            >
+              <span
+                className=""
+                style={{ fontSize: ".6rem", letterSpacing: ".1rem" }}
+              >
+                View car details
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
-      <ReservationModal
-        {...{ car, isModalOpen: isCarInfosModalOpen, reservation, setIsModalOpen: setIsCarInfosModalOpen }}
-        children={<CarInfosModalContent {...{ car: selectedCar, setIsModalOpen: setIsCarInfosModalOpen }} />}
-      ></ReservationModal>
+      <CustomModal
+        {...{ isModalOpen: isCarInfosModalOpen, setIsModalOpen: setIsCarInfosModalOpen }}
+        children={
+          <CarInfosModalContent
+            reservationIsDone={reservationIsDone}
+            {...{ car: selectedCar, setIsModalOpen: setIsCarInfosModalOpen, handleCreateReservation }}
+          />
+        }
+      ></CustomModal>
+      {/* ::::: */}
+      <CustomModal
+        {...{ isReservationDetailsModalOpen }}
+        {...{ isModalOpen: isReservationDetailsModalOpen, setIsModalOpen: setIsReservationDetailsModalOpen }}
+        children={
+          <ReservationModalContent
+            {...{ isReservationDetailsModalOpen, reservation, car, setIsModalOpen: setIsReservationDetailsModalOpen }}
+          />
+        }
+      ></CustomModal>
     </div>
   );
 };
