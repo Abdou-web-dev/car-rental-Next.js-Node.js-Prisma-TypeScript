@@ -1,155 +1,56 @@
 import { Car } from "../types/types";
 
 let cars: Car[] = [
-  { id: 1, make: "Toyota", model: "Corolla", year: 2022, reservations: [] },
-  { id: 2, make: "Honda", model: "Civic", year: 2021, reservations: [] },
-  { id: 3, make: "Ford", model: "F-150", year: 2020, reservations: [] },
-  { id: 4, make: "Chevrolet", model: "Malibu", year: 2019, reservations: [] },
-  { id: 5, make: "Nissan", model: "Altima", year: 2020, reservations: [] },
-  { id: 6, make: "Hyundai", model: "Elantra", year: 2021, reservations: [] },
-  { id: 7, make: "Volkswagen", model: "Jetta", year: 2022, reservations: [] },
-  { id: 8, make: "BMW", model: "X5", year: 2020, reservations: [] },
-  { id: 9, make: "Mercedes-Benz", model: "E-Class", year: 2021, reservations: [] },
-  { id: 10, make: "Audi", model: "A4", year: 2019, reservations: [] },
+  { id: 1, make: "Toyota", model: "Corolla", year: 2019, reservations: [] },
+  { id: 2, make: "Honda", model: "Civic", year: 2018, reservations: [] },
+  { id: 3, make: "Ford", model: "F-150", year: 2017, reservations: [] },
+  { id: 4, make: "Chevrolet", model: "Malibu", year: 2016, reservations: [] },
+  { id: 5, make: "Nissan", model: "Altima", year: 2017, reservations: [] },
+  { id: 6, make: "Hyundai", model: "Elantra", year: 2018, reservations: [] },
+  { id: 7, make: "Volkswagen", model: "Jetta", year: 2019, reservations: [] },
+  { id: 8, make: "BMW", model: "X5", year: 2016, reservations: [] },
+  { id: 9, make: "Mercedes-Benz", model: "E-Class", year: 2017, reservations: [] },
+  { id: 10, make: "Audi", model: "A4", year: 2015, reservations: [] },
+  { id: 11, make: "Toyota", model: "Camry", year: 2023, reservations: [] },
+  { id: 12, make: "Honda", model: "Accord", year: 2023, reservations: [] },
+  { id: 13, make: "Ford", model: "Mustang", year: 2022, reservations: [] },
+  { id: 14, make: "Chevrolet", model: "Cruze", year: 2022, reservations: [] },
+  { id: 15, make: "Nissan", model: "Maxima", year: 2023, reservations: [] },
+  { id: 16, make: "Hyundai", model: "Sonata", year: 2022, reservations: [] },
+  { id: 17, make: "Volkswagen", model: "Passat", year: 2023, reservations: [] },
+  { id: 18, make: "BMW", model: "3 Series", year: 2023, reservations: [] },
+  { id: 19, make: "Mercedes-Benz", model: "C-Class", year: 2022, reservations: [] },
+  { id: 20, make: "Audi", model: "Q5", year: 2023, reservations: [] },
+  { id: 21, make: "Toyota", model: "Rogue", year: 2022, reservations: [] },
+  { id: 22, make: "Honda", model: "Forester", year: 2022, reservations: [] },
+  { id: 23, make: "Ford", model: "CX-5", year: 2022, reservations: [] },
+  { id: 24, make: "Chevrolet", model: "Sorento", year: 2023, reservations: [] },
+  { id: 25, make: "Nissan", model: "Wrangler", year: 2023, reservations: [] },
+  { id: 26, make: "Hyundai", model: "300", year: 2023, reservations: [] },
+  { id: 27, make: "Volkswagen", model: "Enclave", year: 2023, reservations: [] },
+  { id: 28, make: "BMW", model: "Escalade", year: 2023, reservations: [] },
+  { id: 29, make: "Mercedes-Benz", model: "Sierra", year: 2023, reservations: [] },
+  { id: 30, make: "Audi", model: "XC90", year: 2023, reservations: [] },
+  { id: 31, make: "Toyota", model: "911", year: 2023, reservations: [] },
+  { id: 32, make: "Honda", model: "Range Rover", year: 2023, reservations: [] },
+  { id: 33, make: "Ford", model: "F-Type", year: 2023, reservations: [] },
+  { id: 34, make: "Chevrolet", model: "Model S", year: 2023, reservations: [] },
+  { id: 35, make: "Nissan", model: "488 GTB", year: 2023, reservations: [] },
+  { id: 36, make: "Hyundai", model: "Huracán", year: 2023, reservations: [] },
+  { id: 37, make: "Volkswagen", model: "Quattroporte", year: 2023, reservations: [] },
+  { id: 38, make: "BMW", model: "Stelvio", year: 2023, reservations: [] },
+  { id: 39, make: "Mercedes-Benz", model: "Phantom", year: 2023, reservations: [] },
+  { id: 40, make: "Audi", model: "Continental", year: 2023, reservations: [] },
+  { id: 41, make: "Peugeot", model: "308", year: 2010, reservations: [] },
+  { id: 42, make: "Chrysler", model: "300C", year: 2011, reservations: [] },
+  { id: 43, make: "Ferrari", model: "F8 Tributo", year: 2012, reservations: [] },
+  { id: 44, make: "Lamborghini", model: "Huracán", year: 2013, reservations: [] },
+  { id: 45, make: "Porsche", model: "911 Turbo", year: 2014, reservations: [] },
+  { id: 46, make: "Bugatti", model: "Chiron", year: 2015, reservations: [] },
+  { id: 47, make: "Rolls-Royce", model: "Phantom", year: 2016, reservations: [] },
+  { id: 48, make: "Maserati", model: "GranTurismo", year: 2017, reservations: [] },
+  { id: 49, make: "Aston Martin", model: "DB11", year: 2018, reservations: [] },
+  { id: 50, make: "Bentley", model: "Continental GT", year: 2019, reservations: [] },
 ];
 
-// Function to generate a random number within a range
-const getRandomInt = (min: number, max: number) => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-const getRandomCarModel = (usedModels: string[]) => {
-  const carModels = [
-    "Corolla",
-    "Civic",
-    "F-150",
-    "Malibu",
-    "Altima",
-    "Elantra",
-    "Jetta",
-    "X5",
-    "E-Class",
-    "A4",
-    "Camry",
-    "Accord",
-    "Mustang",
-    "Cruze",
-    "Maxima",
-    "Sonata",
-    "Passat",
-    "3 Series",
-    "C-Class",
-    "Q5",
-    "Rogue",
-    "Forester",
-    "CX-5",
-    "Sorento",
-    "Wrangler",
-    "300",
-    "Enclave",
-    "Escalade",
-    "Sierra",
-    "XC90",
-    "911",
-    "Range Rover",
-    "F-Type",
-    "Model S",
-    "488 GTB",
-    "Huracán",
-    "Quattroporte",
-    "Stelvio",
-    "Phantom",
-    "Continental",
-    "Chiron",
-    "570S",
-    "Evora",
-    "DB11",
-  ];
-  const availableModels = carModels.filter((model) => !usedModels.includes(model));
-  if (availableModels.length === 0) {
-    // If all models are used, reset usedModels (this is just an example)
-    usedModels = [];
-  }
-  const randomIndex = getRandomInt(0, availableModels.length - 1);
-  const selectedModel = availableModels[randomIndex];
-  usedModels.push(selectedModel); // Mark this model as used
-  return selectedModel;
-};
-
-// Function to generate a random car make from a list of popular brands
-const getRandomCarMake = () => {
-  const carMakes = [
-    "Toyota",
-    "Honda",
-    "Ford",
-    "Chevrolet",
-    "Nissan",
-    "Hyundai",
-    "Volkswagen",
-    "BMW",
-    "Mercedes-Benz",
-    "Audi",
-    "Lexus",
-    "Subaru",
-    "Mazda",
-    "Kia",
-    "Jeep",
-    "Chrysler",
-    "Buick",
-    "Cadillac",
-    "GMC",
-    "Volvo",
-    "Porsche",
-    "Land Rover",
-    "Jaguar",
-    "Tesla",
-    "Ferrari",
-    "Lamborghini",
-    "Maserati",
-    "Alfa Romeo",
-    "Rolls-Royce",
-    "Bentley",
-    "Bugatti",
-    "McLaren",
-    "Lotus",
-    "Aston Martin",
-    "Lincoln",
-    "Infiniti",
-    "Acura",
-    "Mini",
-    "Genesis",
-  ];
-  const randomIndex = getRandomInt(0, carMakes.length - 1);
-  return carMakes[randomIndex];
-};
-
-// Function to generate a random year between 2005 and 2023
-const getRandomCarYear = () => {
-  return getRandomInt(2005, 2023);
-};
-
-let usedModels: string[] = [];
-
-// Generate additional random cars
-for (let i = 11; i <= 40; i++) {
-  const newCar = {
-    id: i,
-    make: getRandomCarMake(),
-    model: getRandomCarModel(usedModels),
-    year: getRandomCarYear(),
-    reservations: [],
-  };
-  cars.push(newCar);
-}
-
 export { cars };
-
-// Sample reservations (for testing)
-// cars[0].reservations.push({
-//   startDate: new Date("2024-07-10"),
-//   endDate: new Date("2024-07-15"),
-// });
-// cars[1].reservations.push({
-//   startDate: new Date("2024-07-05"),
-//   endDate: new Date("2024-07-08"),
-// });

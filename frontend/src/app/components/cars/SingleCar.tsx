@@ -1,11 +1,17 @@
 import { FunctionComponent, useContext, useEffect, useState } from "react";
-import { Car, CreateReservationResponse } from "../../types/type";
+import { Car, CreateReservationResponse, Reservation } from "../../types/type";
 import { makeReservation } from "../../api/services/reservationService";
 import { AuthContext } from "../../context/authContext";
-import closeIcon from "../../../../public/assets/img/close.png";
-import Modal from "react-modal";
+
 import "./styles.css";
 import Image from "next/image";
+import { formatElapsedTime } from "../../utils/helpers";
+import { carBrandLogo } from "../../utils/logos";
+import ReservationModal from "../modals/ReservationModal";
+import ReservationModalContent from "../modals/content/ReservationModalContent";
+// import CarInfosModalContent from "../modals/content/CarInfosModalContent";
+import { fetchCarById } from "../../api/services/carService";
+import CarInfosModalContent from "../modals/content/CarInfosModalContent";
 
 interface SingleCarProps {
   car: Car;
@@ -13,33 +19,32 @@ interface SingleCarProps {
   endDate: string;
 }
 
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toISOString().split("T")[0]; // Format as YYYY-MM-DD
-};
-
 export const SingleCar: FunctionComponent<SingleCarProps> = ({ car, startDate, endDate }) => {
-  const [hasReservation, setHasReservation] = useState(car.reservations.length > 0);
-  const [reservation, setReservation] = useState<CreateReservationResponse>();
-  const { authenticatedUser, setIsLoggedIn, setAuthenticatedUser, isLoggedIn } = useContext(AuthContext);
+  const [reservation, setReservation] = useState<Reservation>();
+  const { authenticatedUser } = useContext(AuthContext);
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
+  const [isCarInfosModalOpen, setIsCarInfosModalOpen] = useState(false);
+  const [selectedCar, setSelectedCar] = useState<Car | null>(null);
 
-  //   useEffect(() => {
-  //     // console.log(authenticatedUser?.id, startDate, endDate, car?.id, "SingleCar data");
-  //     console.log(authenticatedUser?.id, authenticatedUser?.email, startDate, endDate, car?.id, "SingleCar data");
-  //   }, [authenticatedUser, startDate, endDate, car]);
+  const [message, setMessage] = useState("");
+  const [bookingTime, setBookingTime] = useState<null | Date | undefined>(null);
+  let reservationIsDone = message === "Reservation created successfully";
 
   const handleCreateReservation = async () => {
-    setHasReservation(true);
     try {
-      const newReservation: CreateReservationResponse = await makeReservation(
+      const newReservationResponse: CreateReservationResponse = await makeReservation(
         authenticatedUser?.id,
         startDate,
         endDate,
         car?.id
       );
-      setReservation(newReservation);
-      console.log(newReservation, "newReservation Response : ");
+      // Extract message and reservation data from the response
+      const { message, reservation } = newReservationResponse;
+
+      // Update state with the received message and reservation
+      setMessage(message);
+      setReservation(reservation);
+      console.log(newReservationResponse, "newReservationResponse Response : ");
       console.log("Reservation created successfully!");
     } catch (error) {
       console.error("Error creating reservation:", error);
@@ -51,84 +56,126 @@ export const SingleCar: FunctionComponent<SingleCarProps> = ({ car, startDate, e
     // Logic to change a reservation
   };
 
-  return (
-    <div className="border border-gray-300 rounded-lg p-4 shadow-md">
-      <li className="flex items-center justify-between flex-col">
-        <div>
-          <span className="font-bold text-lg block">{car?.make}</span>
-          <span className="text-gray-500 block">{car?.model}</span>
-          <span className="block">({car?.year})</span>
-        </div>
-        <div className="flex space-x-2 mt-2">
-          <button
-            onClick={() => {
-              handleCreateReservation();
+  useEffect(() => {
+    if (message === "Reservation created successfully") {
+      setBookingTime(new Date());
+    }
+  }, [message]);
 
-              setIsReservationModalOpen(true);
-            }}
-            className={`
-                ${!hasReservation ? "py-2.5 px-4" : "px-1"}
-                bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 rounded`}
-          >
-            <span className="text-xs"> Make Reservation</span>
-          </button>
-          {/* {hasReservation && (
-            <button
-              onClick={handleChangeReservation}
-              className="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-1 rounded"
-            >
-              <span className="text-xs"> Change Reservation</span>
-            </button>
-          )} */}
-        </div>
-      </li>
-      <div>
-        {/* Reservation Modal Infos */}
-        <Modal
-          isOpen={isReservationModalOpen}
-          onRequestClose={() => setIsReservationModalOpen(false)}
-          contentLabel="Reservation Prompt Modal"
-          style={{
-            content: {
-              width: "30%",
-              height: "30%",
-              margin: "10rem auto",
-              background: "rgba(128, 128, 128, 0.11)",
-            },
-          }}
-          className={"reserv-modal"}
-        >
-          <div className="modal-btns">
-            <button
-              className={`modal-btn-yes`}
-              onClick={() => setIsReservationModalOpen(false)}
-            >
-              <Image
-                src={closeIcon}
-                alt="Close Icon"
-                width={40}
-                height={40}
-              />
-            </button>
-          </div>
+  const [elapsedTime, setElapsedTime] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!bookingTime) return;
+
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      if (((now - bookingTime.getTime()) as number) > 5 * 60 * 1000) {
+        // 5 in '5 * 60 * 1000' means that the counting of the elapsed time will start 5 minutes after the reservation has been made
+        setElapsedTime(formatElapsedTime(bookingTime) as string);
+      } else {
+        setElapsedTime(null);
+      }
+    }, 1000); // Check every second
+
+    return () => clearInterval(interval);
+  }, [bookingTime]);
+
+  const showCarDetails = async (): Promise<void> => {
+    try {
+      const carResponse = await fetchCarById(car?.id);
+      console.log(carResponse, "carResponse");
+      setSelectedCar(carResponse);
+      setIsCarInfosModalOpen(true);
+    } catch (error) {
+      console.error("Error fetching car details:", error);
+    }
+  };
+
+  return (
+    <div className="group relative">
+      <div
+        className={`single-car border border-gray-300 rounded-lg p-4 shadow-md group relative
+        ${reservationIsDone ? "bg-green-100 border-green-500" : ""}
+        `}
+      >
+        <Image
+          src={carBrandLogo(car?.make)}
+          alt=""
+          width={24}
+          height={24}
+          className="absolute top-1 left-2 right-0"
+        />
+        <li className="flex items-center justify-between flex-col ">
           <div>
-            {reservation && (
-              <div>
-                <h2>Reservation created successfully !</h2>
-                <h3>Reservation Details:</h3>
-                <p>ID: {reservation.id}</p>
-                <p>Car ID: {reservation.carId}</p>
-                <p>Start Date: {formatDate(reservation.startDate)}</p>
-                <p>End Date: {formatDate(reservation.endDate)}</p>
-                <p>
-                  Duration: {reservation.durationDays} &nbsp;
-                  {reservation.durationDays === 1 ? "day" : reservation.durationDays > 1 ? "days" : ""}
+            <span className="font-bold text-lg block">{car?.make}</span>
+            <span className="text-gray-500 block">{car?.model}</span>
+            <span className="block">({car?.year})</span>
+          </div>
+          <div className="flex space-x-2 mt-2 ">
+            <>
+              {!reservationIsDone ? (
+                <button
+                  onClick={() => {
+                    handleCreateReservation();
+                    setIsReservationModalOpen(true);
+                  }}
+                  className="py-2.5 px-4 absolute top-0 left-0 right-0 bottom-0 bg-blue-400 hover:bg-blue-500 text-white font-bold rounded transition-opacity duration-300 opacity-0 group-hover:opacity-100 hidden group-hover:block"
+                >
+                  <span className="text-xs"> Make Reservation</span>
+                </button>
+              ) : (
+                <p className="text-gray-600 text-xs">
+                  {elapsedTime !== null ? `You booked this car ${elapsedTime} ago.` : "You just booked this car."}
                 </p>
-              </div>
+              )}
+            </>
+            {reservationIsDone && !isReservationModalOpen && (
+              <button
+                onClick={handleChangeReservation}
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-1 rounded"
+              >
+                <span
+                  className=""
+                  style={{ fontSize: ".6rem", letterSpacing: ".1rem" }}
+                >
+                  Change Reservation
+                </span>
+              </button>
             )}
           </div>
-        </Modal>
+        </li>
+        <ReservationModal
+          {...{ car, isModalOpen: isReservationModalOpen, reservation, setIsModalOpen: setIsReservationModalOpen }}
+          children={<ReservationModalContent {...{ reservation, car, setIsModalOpen: setIsReservationModalOpen }} />}
+        ></ReservationModal>
       </div>
+
+      <div className="mt-0.5 mb-4">
+        <button
+          onClick={showCarDetails}
+          className="bg-slate-400 hover:bg-slate-500 text-white px-1 font-bold rounded transition-opacity duration-300 opacity-0 group-hover:opacity-100 absolute hidden group-hover:block"
+        >
+          <span
+            className=""
+            style={{ fontSize: ".6rem", letterSpacing: ".1rem" }}
+          >
+            View car details
+          </span>
+        </button>
+      </div>
+      <ReservationModal
+        {...{ car, isModalOpen: isCarInfosModalOpen, reservation, setIsModalOpen: setIsCarInfosModalOpen }}
+        children={<CarInfosModalContent {...{ car: selectedCar, setIsModalOpen: setIsCarInfosModalOpen }} />}
+      ></ReservationModal>
     </div>
   );
 };
+// I achieved a nice effect where the entire SingleCar component behaves like a clickable button with the "Make reservation" text centered. This can happen when applying Tailwind CSS classes effectively to create a cohesive design and interaction.
+//   useEffect(() => {
+// console.log(bookingTime, elapsedTime);
+// Fri Jul 05 2024 21:18:46 GMT+0100 (GMT+01:00) '1 minutes'
+// bookingTime Fri Jul 05 2024 21:18:46 GMT+0100 (GMT+01:00)
+// elapsedTime '1 minutes'
+//   }, [bookingTime, elapsedTime]);
+
+//   let ReservationModalContentJSX = <ReservationModalContent/>

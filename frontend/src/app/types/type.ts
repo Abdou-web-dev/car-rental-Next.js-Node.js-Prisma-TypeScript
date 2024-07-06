@@ -21,12 +21,15 @@ export interface CreateReservationRequest {
 
 // Define the response interface for reservation creation
 export interface CreateReservationResponse {
+  message: string; // Message from the backend
+  reservation: Reservation;
+}
+
+export interface Reservation {
   id: number;
   userId: number;
   carId: number;
   startDate: string;
   endDate: string;
   durationDays: number;
-  // createdAt?: string;
-  // updatedAt?: string;
 }

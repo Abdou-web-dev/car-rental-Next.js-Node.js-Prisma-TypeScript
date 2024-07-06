@@ -1,5 +1,4 @@
 import express, { Request, RequestHandler, Response } from "express";
-import { PrismaClient } from "@prisma/client";
 import {
   createReservation,
   getReservationsWithDuration,

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import ReservationsService from "../services/reservationsService";
 import { validateReservations } from "../validation/reservations";
 // import { PrismaClient } from "@prisma/client";
-import { CustomRequest } from "../types/types";
+import { Car, CustomRequest } from "../types/types";
 import { cars } from "../data/cars";
 import { isCarAvailable } from "./carsController";
 // const prisma = new PrismaClient();
@@ -28,6 +28,7 @@ const createReservation = async (req: CustomRequest, res: Response) => {
     try {
       start = new Date(startDate);
       end = new Date(endDate);
+
       if (isNaN(start.getTime()) || isNaN(end.getTime())) {
         throw new Error("Invalid date format");
       }
@@ -48,7 +49,7 @@ const createReservation = async (req: CustomRequest, res: Response) => {
       }
     }
 
-    const selectedCar = cars.find((car) => car.id === selectedCarId);
+    const selectedCar: Car | undefined = cars?.find((car: Car) => car.id === selectedCarId);
 
     if (!selectedCar) {
       return res.status(404).json({ error: "Car not found." });
@@ -66,10 +67,14 @@ const createReservation = async (req: CustomRequest, res: Response) => {
       new Date(endDate)
     );
 
-    selectedCar.reservations.push(reservation);
+    // add the newly created reservation to the reservations field of the selectedCar
+    // checking the availability of a car involves verifying if there are any overlapping reservations. Storing reservations within the car object simplifies such logic and makes it easier to implement checks like availability or scheduling.
+
+    selectedCar?.reservations?.push(reservation);
 
     console.log("Reservation created successfully:", reservation);
-    res.status(201).json(reservation);
+    // res.status(201).json(reservation);
+    res.status(201).json({ message: "Reservation created successfully", reservation });
   } catch (error) {
     console.error("Error creating reservation:", error);
     res.status(500).json({ error: "An error occurred while creating the reservation." });

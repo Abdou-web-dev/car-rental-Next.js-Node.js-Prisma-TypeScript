@@ -12,6 +12,7 @@ const AvailableCars: FunctionComponent<AvailableCarsProps> = () => {
   const [endDate, setEndDate] = useState(""); //2024-07-16 startDate example
 
   const handleFetchCars: () => Promise<void> = async () => {
+    // after doing a first reservation , when click the "Check Availability" button in the frontend application after changing the startDate and endDate to make another reservation, the handleFetchCars function triggers the fetchCars function, which in turn sends a request to the backend. The backend filters and returns the updated list of available cars based on the new dates, reflecting the cars that are currently available for reservation within the specified timeframe. This ensures that users see the most up-to-date list of cars that they can choose from when making a reservation.
     try {
       const cars = await fetchCars({ startDate, endDate });
       setCars(cars);
@@ -21,9 +22,11 @@ const AvailableCars: FunctionComponent<AvailableCarsProps> = () => {
   };
 
   return (
-    <div className="w-full">
-      <h2 className="text-2xl font-bold mb-4">Available Cars</h2>
-      <div className="mb-4 flex flex-col md:flex-row gap-6 md:space-x-4 justify-center items-center">
+    <div className="w-full ">
+      <div className="p-20 relative mb-4 flex flex-col md:flex-row gap-6 md:space-x-4 justify-center items-center book-car-section border rounded border-stone-300">
+        <div className="absolute top-2 left-2">
+          <span className="font-serif">Book a car :</span>
+        </div>
         <div className="mb-4 md:mb-0">
           <label className="block mb-1 text-xs font-medium text-blue-700">Start Date :</label>
           <input
@@ -61,7 +64,9 @@ const AvailableCars: FunctionComponent<AvailableCarsProps> = () => {
         </div>
       </div>
 
-      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+      {cars?.length > 0 && <h2 className="text-2xl font-bold mb-4">Available Cars</h2>}
+
+      <ul className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
         {cars?.map((car: Car) => (
           <SingleCar
             key={car?.id}
