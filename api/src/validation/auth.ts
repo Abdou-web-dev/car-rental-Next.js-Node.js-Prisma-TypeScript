@@ -4,6 +4,7 @@ import Joi from "joi";
 const validateSignUp = (data: any) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
+    // role: Joi.string().required(),
     password: Joi.string()
       .min(8)
       .required()

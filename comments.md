@@ -1,8 +1,2 @@
-// const constructFetchUrl = () => {
-//   return `${API_URL}/cars?startDate=${startDate}&endDate=${endDate}`;
-// };
-
-//    const url = constructFetchUrl(); // Construct URL for logging
-//     setFetchUrl(url); // Set the fetch URL to state for logging
-//     console.log(fetchUrl, "fetchUrl");
-//     const response = await axios.get(url, { headers });
+<!-- URL Path Parameters: These are part of the URL itself. For example, in /reservations/123, 123 is a URL path parameter representing the reservation ID.
+Query Parameters: These are added to the URL and usually used to filter or sort data. For example, /reservations?sort=asc&filter=active has query parameters sort and filter. -->

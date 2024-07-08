@@ -18,14 +18,15 @@ const checkAuthToken = (req: CustomRequest, res: Response, next: NextFunction) =
   });
 };
 
-// const checkAdmin = (req, res, next) => {
-//   const user = req.user; // Assume user is added to req object after authentication
+// Middleware to check if the user is an admin
+const checkIsAdmin = (req: CustomRequest, res: Response, next: NextFunction) => {
+  const user = req.user; // Assume user is added to req object after authentication
 
-//   if (user && user.role === 'admin') {
-//     next(); // User is an admin, proceed to the next middleware/route handler
-//   } else {
-//     res.status(403).json({ message: 'Access forbidden: Admins only' });
-//   }
-// };
+  if (user && user.role === "admin") {
+    next(); // User is an admin, proceed to the next middleware/route handler
+  } else {
+    res.status(403).json({ message: "Access forbidden: Admins only" });
+  }
+};
 
-export default checkAuthToken;
+export { checkAuthToken, checkIsAdmin };

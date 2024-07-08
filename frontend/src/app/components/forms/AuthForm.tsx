@@ -9,16 +9,15 @@ interface AuthFormProps {
 }
 
 export const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, error, formType }) => {
-  // const { isLoggedIn } = useContext(AuthContext);
-
   const formikAuthForm = useFormik({
     initialValues: {
-      password: "",
       email: "",
+      password: "",
+      // role: "regular",
     },
     validationSchema: authFormValidationSchema(formType),
     onSubmit: (values, { resetForm }) => {
-      onSubmit(values.email, values.password);
+      onSubmit(values.email as string, values.password);
 
       console.log(error.length, "error.length");
       if (error.length > 0) {
@@ -84,6 +83,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, error, formType })
           required
         />
       </div>
+
       <>
         {formikAuthForm.touched.password && formikAuthForm.errors.password ? (
           <div className="flex items-center justify-center text-red-500 text-xs mt-1 mb-6">
@@ -91,6 +91,25 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, error, formType })
           </div>
         ) : null}
       </>
+      {/* <div>
+        <label
+          className="block text-gray-700 roboto-regular"
+          htmlFor="password"
+        >
+          userRole :
+        </label>
+        <input
+          type="text"
+          id="userRole"
+          name="userRole"
+          onChange={formikAuthForm.handleChange}
+          value={formikAuthForm.values.userRole}
+          placeholder="Role (e.g., user or admin)"
+        />
+        {formikAuthForm.touched.userRole && formikAuthForm.errors.userRole && (
+          <div>{formikAuthForm.errors.userRole}</div>
+        )}
+      </div> */}
       <div className="flex items-center flex-col justify-center">
         {error && <div className="flex items-center justify-center text-red-500 text-xs mt-1 mb-6">{error}</div>}
         {/* Display the error message */}

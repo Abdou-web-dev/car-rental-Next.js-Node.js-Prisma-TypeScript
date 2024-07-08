@@ -9,6 +9,7 @@ export interface Car {
 export interface User {
   email: string;
   id: number;
+  // role: string;
 }
 
 // Define the request body interface for reservation creation
@@ -22,6 +23,11 @@ export interface CreateReservationRequest {
 export interface ChangeReservationRequest {
   startDate: string; //  YYYY-MM-DD format date string
   endDate: string; //  YYYY-MM-DD format date string
+}
+
+export interface UpdateReservationResponse {
+  message: string;
+  updatedReservation: Reservation;
 }
 
 // Define the response interface for reservation creation

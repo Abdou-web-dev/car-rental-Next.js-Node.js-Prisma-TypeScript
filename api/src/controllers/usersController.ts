@@ -11,12 +11,14 @@ const prisma = new PrismaClient();
 // GET /api/users/signup
 export const SignUpHandler = async (req: Request, res: Response) => {
   const { error } = validateSignUp(req.body); // Validate request body
+  // The line const { error } = validateSignUp(req.body); tells Joi to validate the fields provided in req.body against the schema defined in validateSignUp.
   if (error) {
     console.log("signup error", error.details[0].message);
     return res.status(400).json({ message: error.details[0].message });
   }
 
   const { email, password } = req.body;
+  // console.log(role, "role from SignUpHandler API");
 
   try {
     // Check if user with the same email already exists
@@ -47,6 +49,7 @@ export const SignUpHandler = async (req: Request, res: Response) => {
       // non-sensitive fields
       id: newUser.id,
       email: newUser.email,
+      // role: newUser.role,
     };
 
     // Generate JWT token

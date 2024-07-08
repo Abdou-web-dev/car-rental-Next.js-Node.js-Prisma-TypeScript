@@ -2,7 +2,7 @@ import express, { RequestHandler } from "express";
 
 import { PrismaClient } from "@prisma/client";
 import { SignUpHandler, getUserReservations, getUsersReservationsSummary } from "../controllers/usersController";
-import checkAuthToken from "../middlewares/authenticate";
+import { checkAuthToken } from "../middlewares/authenticate";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -11,7 +11,12 @@ const router = express.Router();
 router.post("/signup", SignUpHandler);
 
 // GET /api/users/reservations-summary
-router.get("/reservations-summary", getUsersReservationsSummary);
+router.get(
+  "/reservations-summary",
+  checkAuthToken as RequestHandler,
+  // checkIsAdmin as RequestHandler,
+  getUsersReservationsSummary
+);
 // router.get("/reservations-summary", checkAdmin as RequestHandler, getUsersReservationsSummary);
 // checkAdmin is an example of middlware that would be impelmented to grant access to this page ,that points to the backend api endpoint localhost:5000/api/reservations/duration
 // to only administrators...

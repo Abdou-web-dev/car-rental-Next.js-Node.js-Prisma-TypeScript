@@ -2,6 +2,7 @@ import { Request } from "express";
 
 export interface User {
   id: number;
+  role: string;
 }
 
 export interface CustomRequest extends Request {

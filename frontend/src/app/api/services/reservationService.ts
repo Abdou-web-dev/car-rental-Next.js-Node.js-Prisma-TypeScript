@@ -7,6 +7,7 @@ import {
   CreateReservationRequest,
   CreateReservationResponse,
   Reservation,
+  UpdateReservationResponse,
 } from "../../types/type";
 
 // Service method to create a reservation
@@ -45,7 +46,7 @@ export const changeReservation = async (
   reservationId: number,
   startDate: string,
   endDate: string
-): Promise<Reservation> => {
+): Promise<UpdateReservationResponse> => {
   const token = localStorage.getItem("token");
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -57,8 +58,12 @@ export const changeReservation = async (
   };
 
   try {
-    const response = await axios.put<Reservation>(`${API_URL}/reservations/${reservationId}`, requestBody, { headers });
-
+    const response = await axios.put<UpdateReservationResponse>(
+      `${API_URL}/reservations/${reservationId}`,
+      requestBody,
+      { headers }
+    );
+    console.log(response, "response changeReservation");
     return response.data;
   } catch (error) {
     console.error("Error updating reservation:", error);
@@ -82,9 +87,13 @@ export const fetchUserReservations = async (userId: number): Promise<Reservation
 };
 
 export const fetchAllUsersReservations = async (): Promise<allUsersReservationsResponse[]> => {
+  const token = localStorage.getItem("token");
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
   try {
     //localhost:5000/api/reservations/duration
-    const response = await axios.get(`${API_URL}/reservations/duration`);
+    const response = await axios.get(`${API_URL}/reservations/duration`, { headers });
 
     return response.data;
   } catch (error) {

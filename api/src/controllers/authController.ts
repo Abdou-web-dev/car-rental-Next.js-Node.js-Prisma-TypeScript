@@ -35,6 +35,7 @@ const loginUser = async (req: Request, res: Response) => {
       // non-sensitive fields
       id: user.id,
       email: user.email,
+      // role: "regular",
     };
 
     const response = {

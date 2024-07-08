@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/index.ts",
     "build": "tsc",
-    "dev": "npm run start"
+    "dev": "npm run start",
+    "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",

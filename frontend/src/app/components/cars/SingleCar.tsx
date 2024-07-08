@@ -11,6 +11,7 @@ import ReservationModalContent from "../modals/content/ReservationModalContent";
 import { fetchCarById } from "../../api/services/carService";
 import CarInfosModalContent from "../modals/content/CarInfosModalContent";
 import "./styles.css";
+import UpdateReservationContent from "../modals/content/UpdateReservationContent";
 
 interface SingleCarProps {
   car: Car;
@@ -20,10 +21,11 @@ interface SingleCarProps {
 
 export const SingleCar: FunctionComponent<SingleCarProps> = ({ car, startDate, endDate }) => {
   const [reservation, setReservation] = useState<Reservation>();
-  const [updatedReservation, setUpdatedReservation] = useState<Reservation>();
 
   const { authenticatedUser } = useContext(AuthContext);
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
+  const [isUpdateReservationModalOpen, setIsUpdateReservationModalOpen] = useState(false);
+
   const [isCarInfosModalOpen, setIsCarInfosModalOpen] = useState(false);
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const [message, setMessage] = useState("");
@@ -53,24 +55,11 @@ export const SingleCar: FunctionComponent<SingleCarProps> = ({ car, startDate, e
     }
   };
 
-  const handleChangeReservation = async () => {
-    if (!reservation) {
-      console.error("No reservation found.");
-      return;
-    }
-    // Format dates as ISO-8601
-    //  Dates should be formatted as YYYY-MM-DDTHH:mm:ss.sssZ where Z indicates UTC time zone. Ensure that your dates are converted to this format using JavaScript's toISOString() method.
-    const startDate = new Date("2020/04/15").toISOString();
-    const endDate = new Date("2021/04/22").toISOString();
-    try {
-      const updateReservationResponse: Reservation = await changeReservation(reservation.id, startDate, endDate);
+  // I STILL NEED TO IMPLEMENT THE MODAL UPDATE RESERVATION FNCT !!
+  // ● Tests unitaires et d'intégration couvrant les différents endpoints et règles métier. !!
 
-      setUpdatedReservation(updateReservationResponse);
-      console.log("Reservation updated successfully!", updateReservationResponse);
-    } catch (error) {
-      console.error("Error updating reservation:", error);
-      alert("Failed to update reservation. Please try again later.");
-    }
+  const handleChangeReservation = async () => {
+    setIsUpdateReservationModalOpen(true);
   };
 
   useEffect(() => {
@@ -164,6 +153,18 @@ export const SingleCar: FunctionComponent<SingleCarProps> = ({ car, startDate, e
                 </span>
               </button>
             )}
+            <CustomModal
+              {...{ isModalOpen: isUpdateReservationModalOpen, setIsModalOpen: setIsUpdateReservationModalOpen }}
+              children={
+                <UpdateReservationContent
+                  {...{
+                    reservation,
+                    isModalOpen: isUpdateReservationModalOpen,
+                    setIsModalOpen: setIsUpdateReservationModalOpen,
+                  }}
+                />
+              }
+            ></CustomModal>
           </div>
         </li>
         <CustomModal

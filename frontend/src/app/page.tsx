@@ -22,6 +22,8 @@ const Home = () => {
     setIsLoggedIn(false);
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("token");
+    localStorage.removeItem("isAdmin");
+
     router.push("/auth/signup"); // Redirect to signup page after logout
   };
 
@@ -42,6 +44,18 @@ const Home = () => {
       //   console.log(authenticatedUser, "authenticatedUser");
     }
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+    const adminEmails = ["admin1@example.com", "admin2@example.com", "admin3@example.com"];
+    console.log(storedUser, "storedUser");
+
+    if (adminEmails.includes(storedUser.email)) {
+      localStorage.setItem("isAdmin", "true");
+    } else {
+      localStorage.setItem("isAdmin", "false");
+    }
+  }, []);
 
   if (isLoggedIn) {
     return (

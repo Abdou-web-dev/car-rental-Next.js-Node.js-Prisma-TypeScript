@@ -67,14 +67,19 @@ const createReservation = async (req: CustomRequest, res: Response) => {
       new Date(endDate)
     );
 
+    // Add car details to the reservation object
+    const reservationWithCarDetails = {
+      ...reservation,
+      carMake: selectedCar.make,
+      carModel: selectedCar.model,
+    };
+
     // add the newly created reservation to the reservations field of the selectedCar
     // checking the availability of a car involves verifying if there are any overlapping reservations. Storing reservations within the car object simplifies such logic and makes it easier to implement checks like availability or scheduling.
+    selectedCar?.reservations?.push(reservationWithCarDetails);
 
-    selectedCar?.reservations?.push(reservation);
-
-    console.log("Reservation created successfully:", reservation);
-    // res.status(201).json(reservation);
-    res.status(201).json({ message: "Reservation created successfully", reservation });
+    console.log("Reservation created successfully:", reservationWithCarDetails);
+    res.status(201).json({ message: "Reservation created successfully", reservation: reservationWithCarDetails });
   } catch (error) {
     console.error("Error creating reservation:", error);
     res.status(500).json({ error: "An error occurred while creating the reservation." });
@@ -90,7 +95,7 @@ const updateReservation = async (req: Request, res: Response) => {
       startDate,
       endDate,
     });
-    res.status(200).json(updatedReservation);
+    res.status(200).json({ message: "reservation updated successfully", updatedReservation });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

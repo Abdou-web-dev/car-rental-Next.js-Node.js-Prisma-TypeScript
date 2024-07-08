@@ -7,7 +7,10 @@ import { AuthForm } from "../../components/forms/AuthForm";
 import { Welcome } from "../../components/Welcome";
 import { useRouter } from "next/navigation";
 import { CustomSpin } from "../../components/spinner/CustomSpinner";
-import ViewReservButtons from "../../components/ViewReservButtons";
+
+// ● Tests unitaires et d'intégration couvrant les différents endpoints et règles métier. !!
+
+// I STILL NEED TO IMPLEMENT THE MODAL UPDATE RESERVATION FNCT
 
 export default function Login() {
   const { setIsLoggedIn, isLoggedIn, setAuthenticatedUser, authenticatedUser } = useContext(AuthContext);
@@ -17,12 +20,13 @@ export default function Login() {
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const { accessToken, userEmail, userId } = await loginUser(password, email);
+      const { accessToken, userEmail, userId } = await loginUser(email, password);
       console.log("token and email and user id upon login are :", accessToken, userEmail, userId);
       if (accessToken) {
         setIsLoggedIn(true);
         localStorage.setItem("token", accessToken);
         localStorage.setItem("isLoggedIn", "true");
+        // localStorage.setItem("userRole", userRole);
         // Store user info in localStorage upon successful login
         localStorage.setItem("user", JSON.stringify({ email: userEmail, id: userId }));
         setAuthenticatedUser({ email: userEmail, id: userId });
@@ -63,6 +67,7 @@ export default function Login() {
       <div className="authform-and-button flex justify-center items-center flex-col my-24">
         <div className="w-full sm:w-1/2 lg:w-[35%]">
           <AuthForm
+            // @ts-ignore
             onSubmit={handleLogin}
             formType="login"
             {...{ error: loginError }}
@@ -78,9 +83,6 @@ export default function Login() {
           </button>
         </div>
       </div>
-      <div className="mb-40">
-        <ViewReservButtons></ViewReservButtons>
-      </div>{" "}
     </div>
   );
 }

@@ -2,12 +2,11 @@
 
 import { useContext, useEffect, useState } from "react";
 import { registerUser } from "../../api/services/auth";
-import { AuthForm } from "../../components/forms/AuthForm";
 import { Welcome } from "../../components/Welcome";
 import { AuthContext } from "../../context/authContext";
 import { useRouter } from "next/navigation";
 import { CustomSpin } from "../../components/spinner/CustomSpinner";
-import ViewReservButtons from "../../components/ViewReservButtons";
+import { AuthForm } from "../../components/forms/AuthForm";
 
 export default function Signup() {
   const { setIsLoggedIn, isLoggedIn, setAuthenticatedUser } = useContext(AuthContext);
@@ -20,17 +19,21 @@ export default function Signup() {
 
     try {
       const { accessToken, userEmail, userId } = await registerUser(email, password);
+      console.log("token and email userId and userRole upon signup are :", accessToken, userEmail, userId);
+
       if (accessToken) {
         setIsLoggedIn(true);
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("token", accessToken);
         // Store user info in localStorage upon successful login
+        // localStorage.setItem("userRole", userRole);
         localStorage.setItem("user", JSON.stringify({ email: userEmail, id: userId }));
         setAuthenticatedUser({ email: userEmail, id: userId });
       }
       console.log(accessToken, "token");
       router.push("/"); // Navigate to the root page
     } catch (error: any) {
+      // console.log(email, password);
       console.error("Signup failed:", error.response.data.message);
       setSignUpError(error.response.data.message);
       setIsLoading(false); // Set loading to false if there's an error
@@ -81,10 +84,6 @@ export default function Signup() {
               Login
             </button>
           </div>
-        </div>
-
-        <div className="mb-40">
-          <ViewReservButtons></ViewReservButtons>
         </div>
       </div>
     </div>
