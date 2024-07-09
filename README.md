@@ -15,6 +15,31 @@ Navigate to the "api" directory, install the node dependencies using npm i, then
 Open a new terminal, navigate to the "frontend" directory, install dependencies using npm i, and run "npm run dev" to launch your frontend server at http://localhost:3000.
 Visit http://localhost:3000 to see the app in action.
 
+******************
+here are three 3 admin accounts that you can use to access the app as an admin:
+++admin 1 Infos : 
+email: admin1@example.com
+password : AdminPassword123!
+++admin 2 infos : 
+email : admin2@example.com
+password : ywTvhMNqUyWAZRd#
+++admin 3 Infos : 
+email: admin3@example.com
+password : *d+$5Ks4aWGKdy92!
+
+To seed the database with the admin accounts, follow these steps:
+
+Ensure your database server is running and accessible.
+
+In your terminal, navigate to the "api" directory of your project.
+
+Run the seeding command:
+npm run seed
+This command will execute the script configured to insert predefined data, including the admin accounts, into your database.
+
+Once the seeding process completes successfully, you can use one of the admin accounts' credentials mentioned above to log in to the app:
+
+**************
 here are some screenshots of the app UI : 
 
 https://ibb.co/7r9dN1T
