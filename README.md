@@ -1,10 +1,19 @@
-Here is how you can start the app on your local server :
+You will need to create a ".env" file in the "api" folder and populate it with the following content:
 
-cd to api , install node dependencies using "npm i", then run "tsc" , and then run "node dist/index.js"
-this will launch and start your database.
-then open a new terminal, cd to frontend install "npm i", run "npm run dev"
-this will launch your frontend local server on http://localhost:3000
-so visit http://localhost:3000 to see the app.
+PORT=5000
+ACCESS_TOKEN_SECRET='YOUR_ACCESS_TOKEN'
+DATABASE_URL="postgresql://user:password@localhost:5432/db_name"
+
+Replace "user" with your database username, "password" with your database password, and "db_name" with your database name.
+
+******************************
+Here is how you can start the app on your local server :
+To start the app on your local server:
+
+Navigate to the "api" directory, install the node dependencies using npm i, then run tsc, and finally run node dist/index.js to launch and start your database.
+
+Open a new terminal, navigate to the "frontend" directory, install dependencies using npm i, and run "npm run dev" to launch your frontend server at http://localhost:3000.
+Visit http://localhost:3000 to see the app in action.
 
 here are some screenshots of the app UI : 
 
