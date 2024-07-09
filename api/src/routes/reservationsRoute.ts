@@ -4,7 +4,7 @@ import {
   getReservationsWithDuration,
   updateReservation,
 } from "../controllers/reservationsController";
-import { checkAuthToken, checkIsAdmin } from "../middlewares/authenticate";
+import { checkAuthToken } from "../middlewares/authenticate";
 
 // Initialize Express router
 const router = express.Router();

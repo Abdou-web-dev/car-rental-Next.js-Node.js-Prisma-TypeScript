@@ -10,7 +10,7 @@ import reservationsRoute from "./routes/reservationsRoute";
 
 dotenv.config();
 
-const app = express(); //Creates an instance of Express application.
+export const app = express(); //Creates an instance of Express application.
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3001;
 
