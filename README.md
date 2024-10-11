@@ -84,6 +84,38 @@ Once the seeding process completes successfully, you can use one of the admin ac
 **************
 here are some screenshots of the app UI : 
 
+![Screenshot (885)](https://github.com/user-attachments/assets/eb665d27-29d7-424c-9a8d-1c6e2523703a)
+
+
+![Screenshot (886)](https://github.com/user-attachments/assets/6d850394-34ac-4934-a210-47fc889a5bbb)
+![Screenshot (887)](https://github.com/user-attachments/assets/41107ed2-6c92-4226-be06-07c65e46114d)
+![Screenshot (891)](https://github.com/user-attachments/assets/e75782dc-889b-4d04-a14a-f5ec44e3ff9f)
+![Screenshot (892)](https://github.com/user-attachments/assets/656651d8-ad1d-4247-bf57-c3d7f5819da3)
+![Screenshot (893)](https://github.com/user-attachments/assets/c9e5e259-c999-43fd-80ac-993ac78a41d1)
+![Screenshot (894)](https://github.com/user-attachments/assets/3fdfc4d9-8cff-4f98-b759-3b91c64cee6a)
+![Screenshot (895)](https://github.com/user-attachments/assets/78b1bea2-0003-4d2a-aa0c-70ae1af5902f)
+![Screenshot (877)](https://github.com/user-attachments/assets/44053f14-238d-43ed-842f-e89a8d4fe3ef)
+![Screenshot (878)](https://github.com/user-attachments/assets/316c4b46-ab8b-47d3-87db-7e408c8f1811)
+![Screenshot (879)](https://github.com/user-attachments/assets/6c11f46e-2bac-431e-a577-70653fea7a84)
+![Screenshot (876)](https://github.com/user-attachments/assets/b7f4f93d-5711-4f27-8938-c0d13b2aadb7)
+![Screenshot (875)](https://github.com/user-attachments/assets/a0d7a33c-9711-498b-ab29-fafe9eab4c7c)
+![Screenshot (870)](https://github.com/user-attachments/assets/9686346f-3bb4-4678-ba95-3a2aca8a86e7)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 https://ibb.co/7r9dN1T
 https://ibb.co/rc6KB0R
 https://ibb.co/Xz3HMVT
