@@ -2,45 +2,42 @@ Car Rental Management API
 This project is a car rental management API built with Next.js, Node.js, Prisma, and TypeScript. The API allows users to view available cars, book cars for specified periods, and manage their reservations. It implements strict business rules to ensure confidentiality, car availability, and reservation date validity.
 
 Table of Contents
-Business Context
-Business Rules
-API Endpoints
-Technologies Used
-Project Structure
-Installation
-Running the Application
-Database Setup
-Testing
-Contributing
-License
+
 Business Context
 This project simulates a car rental service where users can:
 
 View available cars.
 Make, edit, or cancel car reservations.
 Ensure they can only view and modify their own reservations.
+
 Business Rules
 Confidentiality of Reservations: Users can only view their own reservations.
 Car Availability: A car cannot be booked by multiple users for overlapping periods.
 Validity of Reservation Dates: The reservation end date must not precede the start date.
+
 API Endpoints
 Authentication
 All API requests must include a JWT token in the Authorization header.
+
 Car Endpoints
 GET /api/cars: Returns a list of all available cars.
 GET /api/cars/{id}: Provides the details of a specific car.
+
 Reservation Endpoints
+
 POST /api/reservations: Allows users to create a new reservation (requires car ID, start, and end dates).
 GET /api/users/{id}/reservations: Retrieves a list of reservations for the authenticated user.
 PUT /api/reservations/{id}: Allows users to modify an existing reservation.
 GET /api/reservations/duration: Returns a list of reservations with the duration of each reservation in days.
 GET /api/users/reservations-summary: Returns a summary of users with the total number of reservations and total reservation durations.
+
 Technologies Used
 Next.js (App Router for front-end framework)
-Node.js (Back-end)
+Node.js and Express (Back-end)
 Prisma (ORM and database management)
 TypeScript (For strict code typing)
 Axios or Fetch API (for API requests)
+
 
 
 You will need to create a ".env" file in the "api" folder and populate it with the following content:
